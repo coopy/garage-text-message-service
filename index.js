@@ -3,6 +3,7 @@
 const log = require('./lib/log').child({ service: 'garage-door-text-message' });
 const GarageDoorService = require('./lib/garage-door-service');
 const TextMessageService = require('./lib/text-message-service');
+const TextMessageWebhookService = require('./lib/text-message-webhook');
 
 GarageDoorService.startListening(function (err, socket) {
   if (err) {
@@ -31,4 +32,10 @@ GarageDoorService.startListening(function (err, socket) {
       log.info({ message: closeMessage }, 'text message sent');
     });
   });
+});
+
+TextMessageWebhookService.startListening(function (err) {
+  if (err) {
+    return log.err(err, 'could not start text message receiving webhook');
+  }
 });
