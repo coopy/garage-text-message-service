@@ -1,4 +1,7 @@
 module.exports = {
+  log: {
+    level: 'info'
+  },
   server: {
     port: 5002
   },
