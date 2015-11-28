@@ -10,32 +10,34 @@ GarageDoorService.startListening(function (err, socket) {
     throw err;
   }
 
-  const openMessage = 'Garage door is open';
-  const closeMessage = 'Garage door is closed';
+  const messages = {
+    open: 'Garage door is open',
+    close:'Garage door is closed'
+  };
+
+  TextMessageWebhookService.startListening(messages, function (err) {
+    if (err) {
+      return log.err(err, 'could not start text message receiving webhook');
+    }
+  });
 
   socket.on('open', function (status) {
     log.info(status, 'open event received');
-    TextMessageService.sendMessage(openMessage, function (err) {
+    TextMessageService.sendMessage(messages.open, function (err) {
       if (err) {
         return log.error(err);
       }
-      log.info({ message: openMessage }, 'text message sent');
+      log.info({ message: messages.open }, 'text message sent');
     });
   });
 
   socket.on('close', function (status) {
     log.info(status, 'close event received');
-    TextMessageService.sendMessage(closeMessage, function (err) {
+    TextMessageService.sendMessage(messages.close, function (err) {
       if (err) {
         return log.error(err);
       }
-      log.info({ message: closeMessage }, 'text message sent');
+      log.info({ message: messages.close }, 'text message sent');
     });
   });
-});
-
-TextMessageWebhookService.startListening(function (err) {
-  if (err) {
-    return log.err(err, 'could not start text message receiving webhook');
-  }
 });
